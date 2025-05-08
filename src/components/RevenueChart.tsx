@@ -12,6 +12,12 @@ import {
 import { Bar } from 'react-chartjs-2';
 import { Box, Image, HStack, VStack, Text } from '@chakra-ui/react';
 
+// Import bank logos directly
+import anzLogo from '../assets/anz-logo.png';
+import asbLogo from '../assets/asb-logo.png';
+import bnzLogo from '../assets/bnz-logo.png';
+import westpacLogo from '../assets/westpac-logo.png';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,12 +27,12 @@ ChartJS.register(
   Legend
 );
 
-// Import bank logos
+// Bank logos mapping
 const bankLogos = {
-  ANZ: '/bank-logos/anz-logo.png',
-  ASB: '/bank-logos/asb-logo.png',
-  BNZ: '/bank-logos/bnz-logo.png',
-  Westpac: '/bank-logos/westpac-logo.png'
+  ANZ: anzLogo,
+  ASB: asbLogo,
+  BNZ: bnzLogo,
+  Westpac: westpacLogo
 };
 
 type BankRevenue = {
@@ -136,12 +142,22 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
       <HStack justify="space-around" mt={4} px={4}>
         {data.map(bank => (
           <VStack key={bank.name} spacing={2}>
-            <Image
-              src={bankLogos[bank.name as keyof typeof bankLogos]}
-              alt={`${bank.name} logo`}
-              boxSize="40px"
-              objectFit="contain"
-            />
+            <Box
+              width="60px"
+              height="40px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Image
+                src={bankLogos[bank.name as keyof typeof bankLogos]}
+                alt={`${bank.name} logo`}
+                maxHeight="40px"
+                maxWidth="60px"
+                objectFit="contain"
+                fallback={<Text fontWeight="bold">{bank.name}</Text>}
+              />
+            </Box>
             <Text fontWeight="bold" fontSize="sm">${bank.annualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</Text>
           </VStack>
         ))}
