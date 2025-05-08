@@ -12,12 +12,6 @@ import {
 import { Bar } from 'react-chartjs-2';
 import { Box, Image, HStack, VStack, Text } from '@chakra-ui/react';
 
-// Import bank logos directly
-import anzLogo from '../assets/anz-logo.png';
-import asbLogo from '../assets/asb-logo.png';
-import bnzLogo from '../assets/bnz-logo.png';
-import westpacLogo from '../assets/westpac-logo.png';
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -27,12 +21,12 @@ ChartJS.register(
   Legend
 );
 
-// Bank logos mapping
+// Bank logos mapping with direct URLs to Wikimedia Commons SVG files
 const bankLogos = {
-  ANZ: anzLogo,
-  ASB: asbLogo,
-  BNZ: bnzLogo,
-  Westpac: westpacLogo
+  ANZ: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/ANZ-Logo-2009.svg',
+  ASB: 'https://upload.wikimedia.org/wikipedia/en/5/59/ASB_Bank_logo.svg',
+  BNZ: 'https://upload.wikimedia.org/wikipedia/en/8/80/Bank_of_New_Zealand_logo.svg',
+  Westpac: 'https://upload.wikimedia.org/wikipedia/en/a/ac/Westpac_logo.svg'
 };
 
 type BankRevenue = {
@@ -143,16 +137,19 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
         {data.map(bank => (
           <VStack key={bank.name} spacing={2}>
             <Box
-              width="60px"
+              width="70px"
               height="40px"
               display="flex"
               justifyContent="center"
               alignItems="center"
+              bg="white"
+              borderRadius="md"
+              p={1}
             >
               <Image
                 src={bankLogos[bank.name as keyof typeof bankLogos]}
                 alt={`${bank.name} logo`}
-                maxHeight="40px"
+                maxHeight="30px"
                 maxWidth="60px"
                 objectFit="contain"
                 fallback={<Text fontWeight="bold">{bank.name}</Text>}
