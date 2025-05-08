@@ -74,8 +74,10 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
         labels: {
           font: {
             size: 14,
-            weight: 'bold'
-          }
+            weight: 'bold',
+            family: "'Inter', sans-serif"
+          },
+          padding: 20
         }
       },
       title: {
@@ -83,8 +85,10 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
         text: 'Projected Annual API Fee Revenue by Bank',
         font: {
           size: 16,
-          weight: 'bold'
+          weight: 'bold',
+          family: "'Inter', sans-serif"
         },
+        color: '#2C5282', // blue.700
         padding: {
           bottom: 20
         }
@@ -93,12 +97,15 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         titleFont: {
           size: 14,
-          weight: 'bold'
+          weight: 'bold',
+          family: "'Inter', sans-serif"
         },
         bodyFont: {
-          size: 14
+          size: 14,
+          family: "'Inter', sans-serif"
         },
         padding: 12,
+        cornerRadius: 6,
         callbacks: {
           label: function(context) {
             const value = context.raw as number;
@@ -111,12 +118,19 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(0, 0, 0, 0.05)'
+          color: 'rgba(0, 0, 0, 0.04)',
+          lineWidth: 1
+        },
+        border: {
+          dash: [4, 4]
         },
         ticks: {
           font: {
-            size: 12
+            size: 12,
+            family: "'Inter', sans-serif"
           },
+          padding: 8,
+          color: '#4A5568', // gray.600
           callback: function(value) {
             return '$' + Number(value).toLocaleString('en-NZ');
           }
@@ -129,8 +143,10 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
         ticks: {
           font: {
             size: 12,
-            weight: 'bold'
-          }
+            weight: 'bold',
+            family: "'Inter', sans-serif"
+          },
+          color: '#2D3748' // gray.700
         }
       }
     }
@@ -139,30 +155,48 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
   // Render bank logos below the chart
   const renderBankLogos = () => {
     return (
-      <HStack justify="space-around" mt={4} px={4}>
+      <HStack justify="space-around" mt={6} px={4}>
         {data.map(bank => (
-          <VStack key={bank.name} spacing={2}>
+          <VStack key={bank.name} spacing={3}>
             <Box
-              width="70px"
-              height="40px"
+              width="80px"
+              height="45px"
               display="flex"
               justifyContent="center"
               alignItems="center"
               bg="white"
-              borderRadius="md"
-              p={1}
+              borderRadius="lg"
+              p={2}
               boxShadow="md"
+              border="1px solid"
+              borderColor="gray.100"
+              transition="all 0.2s"
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
+                borderColor: "gray.200"
+              }}
             >
               <Image
                 src={bankLogos[bank.name as keyof typeof bankLogos]}
                 alt={`${bank.name} logo`}
-                maxHeight="30px"
-                maxWidth="60px"
+                maxHeight="35px"
+                maxWidth="70px"
                 objectFit="contain"
                 fallback={<Text fontWeight="bold">{bank.name}</Text>}
               />
             </Box>
-            <Text fontWeight="bold" fontSize="sm">${bank.annualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</Text>
+            <Text
+              fontWeight="bold"
+              fontSize="sm"
+              color={bank.color}
+              bg={`${bank.color}10`}
+              px={3}
+              py={1}
+              borderRadius="full"
+            >
+              ${bank.annualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}
+            </Text>
           </VStack>
         ))}
       </HStack>
@@ -171,7 +205,7 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
 
   return (
     <Box>
-      <Box height="250px">
+      <Box height="250px" mb={2}>
         <Bar data={chartData} options={options} />
       </Box>
       {renderBankLogos()}
