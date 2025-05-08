@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import {
-  Box, 
-  Container, 
-  Heading, 
-  Text, 
-  VStack, 
+  Box,
+  Container,
+  Heading,
+  Text,
+  VStack,
   HStack,
   Slider,
   SliderTrack,
@@ -31,17 +31,21 @@ import {
   StatLabel,
   StatNumber,
   StatHelpText,
+  Link,
+  Icon,
+  Flex,
 } from '@chakra-ui/react'
+import { FaGithub } from 'react-icons/fa'
 import { RevenueChart } from './components/RevenueChart'
 import { ComparisonChart } from './components/ComparisonChart'
 import { CostAnalysis } from './components/CostAnalysis'
 
 // Bank data with their customer numbers (approximated)
 const bankData = [
-  { name: 'ANZ', customerCount: 2000000, color: 'blue.500' },
-  { name: 'ASB', customerCount: 1400000, color: 'yellow.500' },
-  { name: 'BNZ', customerCount: 1200000, color: 'purple.500' },
-  { name: 'Westpac', customerCount: 1300000, color: 'red.500' }
+  { name: 'ANZ', customerCount: 2000000, color: '#0072CE' }, // ANZ blue
+  { name: 'ASB', customerCount: 1400000, color: '#FFB600' }, // ASB gold/yellow
+  { name: 'BNZ', customerCount: 1200000, color: '#0075C9' }, // BNZ blue
+  { name: 'Westpac', customerCount: 1300000, color: '#D5002B' }  // Westpac red
 ];
 
 function App() {
@@ -57,28 +61,28 @@ function App() {
     return bankData.map(bank => {
       // Customers using open banking APIs
       const customersUsingAPI = Math.round(bank.customerCount * (percentageCustomersUsingAPI / 100));
-      
+
       // Customers under the cap
       const customersBelowCap = Math.round(customersUsingAPI * (1 - percentageReachingCap / 100));
-      
+
       // Customers hitting the cap
       const customersHittingCap = customersUsingAPI - customersBelowCap;
-      
+
       // Revenue from customers below cap (1 cent per API call)
       const revenueBelowCap = customersBelowCap * apiCallsPerCustomer * 0.01;
-      
+
       // Revenue from customers hitting cap ($5 per customer)
       const revenueAtCap = customersHittingCap * 5;
-      
+
       // Revenue from payment initiations (5 cents per transaction)
       const paymentInitiationRevenue = customersUsingAPI * paymentInitiationsPerCustomer * 0.05;
-      
+
       // Total monthly revenue
       const totalMonthlyRevenue = revenueBelowCap + revenueAtCap + paymentInitiationRevenue;
-      
+
       // Annual revenue
       const annualRevenue = totalMonthlyRevenue * 12;
-      
+
       return {
         ...bank,
         customersUsingAPI,
@@ -101,9 +105,15 @@ function App() {
       <VStack spacing={8} align="stretch">
         <Box textAlign="center">
           <Heading as="h1" size="xl" mb={2}>NZ Banks API Fee Revenue Calculator</Heading>
-          <Text fontSize="lg" color="gray.500">
+          <Text fontSize="lg" color="gray.500" mb={2}>
             Estimate how much revenue the Big 4 banks could generate from open banking API fees
           </Text>
+          <Flex justifyContent="center" alignItems="center">
+            <Link href="https://github.com/silverkiwi/bank-api-fee-calculator" isExternal color="blue.500" display="flex" alignItems="center">
+              <Icon as={FaGithub} mr={2} />
+              View on GitHub
+            </Link>
+          </Flex>
         </Box>
 
         <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6}>
@@ -208,8 +218,8 @@ function App() {
                     <StatNumber>${totalAnnualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</StatNumber>
                     <StatHelpText>From API fees across all Big 4 banks</StatHelpText>
                   </Stat>
-                  
-                  <Box height="300px">
+
+                  <Box height="350px">
                     <RevenueChart data={bankRevenueData} />
                   </Box>
                 </VStack>
@@ -239,13 +249,13 @@ function App() {
                             <StatLabel>Annual Revenue</StatLabel>
                             <StatNumber>${bank.annualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</StatNumber>
                           </Stat>
-                          
+
                           <Box>
                             <Text fontWeight="bold">Monthly Breakdown:</Text>
                             <Text>Data API Revenue: ${(bank.revenueBelowCap + bank.revenueAtCap).toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</Text>
                             <Text>Payment API Revenue: ${bank.paymentInitiationRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</Text>
                           </Box>
-                          
+
                           <Box>
                             <Text fontWeight="bold">Customer Stats:</Text>
                             <Text>API Users: {bank.customersUsingAPI.toLocaleString('en-NZ')}</Text>
@@ -258,12 +268,12 @@ function App() {
                 ))}
               </Grid>
             </TabPanel>
-            
+
             <TabPanel>
               <Card>
                 <CardBody>
                   <Heading size="md" mb={4}>Revenue Streams Comparison</Heading>
-                  <Box height="400px">
+                  <Box height="450px">
                     <ComparisonChart data={bankRevenueData} />
                   </Box>
                 </CardBody>
@@ -273,7 +283,7 @@ function App() {
             <TabPanel>
               <CostAnalysis bankRevenueData={bankRevenueData} />
             </TabPanel>
-            
+
             <TabPanel>
               <Card>
                 <CardBody>
@@ -286,12 +296,12 @@ function App() {
                       <Text>• Maximum of $5 per customer per month for transaction data</Text>
                       <Text>• 5 cents per transaction for payment initiation</Text>
                     </Box>
-                    
+
                     <Box>
                       <Heading size="sm">International Comparison</Heading>
                       <Text>Unlike the UK, Australia, and Canada—which mandate free API access—New Zealand's approach allows banks to charge fees, which critics argue may stifle innovation and competition.</Text>
                     </Box>
-                    
+
                     <Box>
                       <Heading size="sm">Timeline</Heading>
                       <Text>Major banks (ANZ, ASB, BNZ, Westpac) must comply with API standards by December 2025. Kiwibank follows in 2026.</Text>
