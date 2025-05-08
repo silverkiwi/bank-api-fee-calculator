@@ -10,7 +10,13 @@ import {
   ChartOptions
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { Box, HStack, VStack, Text } from '@chakra-ui/react';
+import { Box, HStack, VStack, Text, Image } from '@chakra-ui/react';
+
+// Import bank logos directly
+import anzLogo from '../assets/anz-logo.svg';
+import asbLogo from '../assets/asb-logo.svg';
+import bnzLogo from '../assets/bnz-logo.svg';
+import westpacLogo from '../assets/westpac-logo.svg';
 
 ChartJS.register(
   CategoryScale,
@@ -21,12 +27,12 @@ ChartJS.register(
   Legend
 );
 
-// Bank logos mapping with brand colors instead of images
+// Bank logos mapping
 const bankLogos = {
-  ANZ: '#0072CE', // ANZ blue
-  ASB: '#FFB600', // ASB gold/yellow
-  BNZ: '#0075C9', // BNZ blue
-  Westpac: '#D5002B'  // Westpac red
+  ANZ: anzLogo,
+  ASB: asbLogo,
+  BNZ: bnzLogo,
+  Westpac: westpacLogo
 };
 
 type BankRevenue = {
@@ -142,18 +148,19 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
               display="flex"
               justifyContent="center"
               alignItems="center"
-              bg={bankLogos[bank.name as keyof typeof bankLogos]}
+              bg="white"
               borderRadius="md"
               p={1}
               boxShadow="md"
             >
-              <Text
-                fontWeight="bold"
-                fontSize="md"
-                color="white"
-              >
-                {bank.name}
-              </Text>
+              <Image
+                src={bankLogos[bank.name as keyof typeof bankLogos]}
+                alt={`${bank.name} logo`}
+                maxHeight="30px"
+                maxWidth="60px"
+                objectFit="contain"
+                fallback={<Text fontWeight="bold">{bank.name}</Text>}
+              />
             </Box>
             <Text fontWeight="bold" fontSize="sm">${bank.annualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</Text>
           </VStack>
