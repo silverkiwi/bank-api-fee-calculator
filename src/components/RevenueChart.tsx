@@ -10,7 +10,7 @@ import {
   ChartOptions
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { Box, Image, HStack, VStack, Text } from '@chakra-ui/react';
+import { Box, HStack, VStack, Text } from '@chakra-ui/react';
 
 ChartJS.register(
   CategoryScale,
@@ -21,12 +21,12 @@ ChartJS.register(
   Legend
 );
 
-// Bank logos mapping with direct URLs to Wikimedia Commons SVG files
+// Bank logos mapping with brand colors instead of images
 const bankLogos = {
-  ANZ: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/ANZ-Logo-2009.svg',
-  ASB: 'https://upload.wikimedia.org/wikipedia/en/5/59/ASB_Bank_logo.svg',
-  BNZ: 'https://upload.wikimedia.org/wikipedia/en/8/80/Bank_of_New_Zealand_logo.svg',
-  Westpac: 'https://upload.wikimedia.org/wikipedia/en/a/ac/Westpac_logo.svg'
+  ANZ: '#0072CE', // ANZ blue
+  ASB: '#FFB600', // ASB gold/yellow
+  BNZ: '#0075C9', // BNZ blue
+  Westpac: '#D5002B'  // Westpac red
 };
 
 type BankRevenue = {
@@ -142,18 +142,18 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
               display="flex"
               justifyContent="center"
               alignItems="center"
-              bg="white"
+              bg={bankLogos[bank.name as keyof typeof bankLogos]}
               borderRadius="md"
               p={1}
+              boxShadow="md"
             >
-              <Image
-                src={bankLogos[bank.name as keyof typeof bankLogos]}
-                alt={`${bank.name} logo`}
-                maxHeight="30px"
-                maxWidth="60px"
-                objectFit="contain"
-                fallback={<Text fontWeight="bold">{bank.name}</Text>}
-              />
+              <Text
+                fontWeight="bold"
+                fontSize="md"
+                color="white"
+              >
+                {bank.name}
+              </Text>
             </Box>
             <Text fontWeight="bold" fontSize="sm">${bank.annualRevenue.toLocaleString('en-NZ', { maximumFractionDigits: 0 })}</Text>
           </VStack>
